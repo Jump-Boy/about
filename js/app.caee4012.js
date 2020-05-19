@@ -299,7 +299,7 @@
                         e.pushToList({
                             type: "system",
                             label: "System",
-                            message: 'Type "back" to return to the main page.'
+                            message: 'Type "back" to return to the previous page.'
                         }),
                         e.handleFocus()
                     }))
@@ -382,6 +382,7 @@
                         this.pushToList({
                             message: "Here is a list of supporting command."
                         }), this.supportingCommandList.forEach((function (e) {
+							// 优化为字典排序遍历
                                 t.commandList[e] ? t.pushToList({
                                     type: "success",
                                     label: e,
@@ -392,7 +393,7 @@
                                     message: "// ".concat(t.taskList[e].description)
                                 })
                             })), this.pushToList({
-                            message: 'Type "back" to return to the main page.'
+                            message: 'Type "back" to return to the previous page.'
                         });
                     this.autoScroll(),
                     this.handleFocus()
@@ -481,6 +482,23 @@
             }
         ],
         y = {
+			restart: {
+                description: "Introducting myself again.",
+                restart: function (e) {
+                    var t = 0;
+                    return new Promise((function (s) {
+                            var n = setInterval((function () {
+                                        e(h[t]),
+                                        t++,
+                                        h[t] || (clearInterval(n), s({
+                                                type: "success",
+                                                label: "Done",
+                                                message: "Myself introduction is over!"
+                                            }))
+                                    }), 1e3)
+                        }))
+                }
+            },
             echo: {
                 description: "Echoes input.",
                 echo: function (e, t) {
@@ -497,6 +515,24 @@
                                 type: "success",
                                 label: "",
                                 message: ""
+                            })
+                        }))
+                }
+            },
+			home: {
+                description: "Open my home page in a new tab.",
+                home: function (e, t) {
+                    return new Promise((function (t, s) {
+                            e({
+                                type: "success",
+                                label: "Success",
+                                message: "Opening"
+                            }),
+                            window.open("https://humh.cn", "_blank"),
+                            t({
+                                type: "success",
+                                label: "Done",
+                                message: ":)"
                             })
                         }))
                 }
@@ -521,24 +557,7 @@
                             })
                         }))
                 }
-            },
-            restart: {
-                description: "Introducting myself again.",
-                restart: function (e) {
-                    var t = 0;
-                    return new Promise((function (s) {
-                            var n = setInterval((function () {
-                                        e(h[t]),
-                                        t++,
-                                        h[t] || (clearInterval(n), s({
-                                                type: "success",
-                                                label: "Done",
-                                                message: "Myself introduction is over!"
-                                            }))
-                                    }), 1e3)
-                        }))
-                }
-            },
+            }, 
             blog: {
                 description: "Open my blog in a new tab.",
                 blog: function (e, t) {
@@ -559,7 +578,7 @@
             },
             bilibili: {
                 description: "Open my bilibili in a new tab.",
-                weibo: function (e, t) {
+                bilibili: function (e, t) {
                     return new Promise((function (t, s) {
                             e({
                                 type: "success",
